@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword  } from "firebase/auth";
-import app from '../../../firebase/firebase.config';
+import app from '../../firebase/firebase.config';
 
 
 const auth = getAuth(app);
 
 const Register = () => {
-    const [email, setEmail] = useState('');
+    const [error, setError] = useState('');
 
     const handleSubmit = (event) =>{
         // 1. prevent page refresh
@@ -27,9 +27,13 @@ const Register = () => {
         .then(result=>{
             const loggedUser = result.user;
             console.log(loggedUser);
+            // clear error message if there isn't
+            setError('');
+            // reset field value if there isn't any error
         })
         .catch(error => {
-            console.log(error);
+            console.log(error.message);
+            setError(error.message)
         })
         }
 
@@ -48,12 +52,13 @@ const Register = () => {
         <div onSubmit={handleSubmit} className='w-50 mx-auto'>
             <h3>Please Register</h3>
             <form onSubmit={handleSubmit}>
-                <input className='w-50 mb-4 rounded'  onChange={handleEmailChange} type="email" name="email" id="email" placeholder='Your Email' />
+                <input className='w-50 mb-4 rounded'  onChange={handleEmailChange} type="email" name="email" id="email" placeholder='Your Email' required />
                 <br />
-                <input className='w-50 mb-4 rounded'  onBlur={handlePasswordBlur} type="password" name="password" id="password" placeholder='Your Password' />
+                <input className='w-50 mb-4 rounded'  onBlur={handlePasswordBlur} type="password" name="password" id="password" placeholder='Your Password' required />
                 <br />
                 <input className='btn btn-primary' type="submit" value="Register" />
             </form>
+            <p className='text-danger'>{error}</p>
         </div>
     );
 };
