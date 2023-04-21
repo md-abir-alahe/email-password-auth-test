@@ -7,8 +7,10 @@ const auth = getAuth(app);
 
 const Register = () => {
     const [error, setError] = useState('');
+    const [success, setSuccess] =useState('');
 
     const handleSubmit = (event) =>{
+        setSuccess('');
         // 1. prevent page refresh
         event.preventDefault();
         // console.log(event);
@@ -30,10 +32,16 @@ const Register = () => {
             // clear error message if there isn't
             setError('');
             // reset field value if there isn't any error
+            event.target.reset();
+            // if user created successfully show success message 
+            setSuccess('User has created successfully');
+            // 
         })
         .catch(error => {
             console.log(error.message);
             setError(error.message)
+            // if user created unSuccessful 
+            setSuccess('');
         })
         }
 
@@ -59,6 +67,7 @@ const Register = () => {
                 <input className='btn btn-primary' type="submit" value="Register" />
             </form>
             <p className='text-danger'>{error}</p>
+            <p className='text-danger'>{success}</p>
         </div>
     );
 };
