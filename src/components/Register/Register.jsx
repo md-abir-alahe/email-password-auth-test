@@ -11,6 +11,7 @@ const Register = () => {
 
     const handleSubmit = (event) =>{
         setSuccess('');
+        setError('');
         // 1. prevent page refresh
         event.preventDefault();
         // console.log(event);
@@ -24,6 +25,20 @@ const Register = () => {
         // console.log(email, password);
         // create use by using firebase
 
+        // validate password
+        if(!/(?=.*[A-Z])/.test(password)){
+            setError('Please add at least one upper case.');
+            return;
+        }
+        else if(!/(?=.*[0-9].*[0-9])/.test(password)){
+            setError('Please add at least two digits');
+            return;
+        }
+        else if(password.length<6){
+            setError('Your password should have contain at least 6 characters');
+            return;
+        }
+
         // 3. create user in fb
         createUserWithEmailAndPassword(auth, email, password)
         .then(result=>{
@@ -34,7 +49,7 @@ const Register = () => {
             // reset field value if there isn't any error
             event.target.reset();
             // if user created successfully show success message 
-            setSuccess('User has created successfully');
+            setSuccess('User has been created successfully');
             // 
         })
         .catch(error => {
@@ -67,7 +82,7 @@ const Register = () => {
                 <input className='btn btn-primary' type="submit" value="Register" />
             </form>
             <p className='text-danger'>{error}</p>
-            <p className='text-danger'>{success}</p>
+            <p className='text-success'>{success}</p>
         </div>
     );
 };
